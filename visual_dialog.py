@@ -41,7 +41,7 @@ def load_favs():
 
 @st.dialog("Data folder")
 def load_folder():
-    folder = st.file_uploader('Upload data')
+    folder = st.file_uploader('Upload data').read()
     if folder is not None:
         st.write(folder)
     if st.button("Submit"):
