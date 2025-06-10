@@ -42,6 +42,8 @@ def load_favs():
 @st.dialog("Data folder")
 def load_folder():
     folder = st.file_uploader('Upload data')
+    if folder is not None:
+        st.write(folder)
     if st.button("Submit"):
         with zipfile.zipfile(folder) as z:
             file = pd.read_excel(z.open('file.xlsx'), index_col = 0)
@@ -56,7 +58,8 @@ def load_folder():
             BS.Value = BS.Value.astype(float)
         #st.session_state['folder'] = folder
         st.rerun()
-    return file, IS, BS
+        return file, IS, BS
+    return
 
 @st.fragment
 def filtering():    
@@ -319,7 +322,7 @@ def back_gradient(df_s, file_, var):
     
 
 if 'folder' not in st.session_state:
-    file, IS, BS = load_folder()
+    load_folder()
 else:
     # file, IS, BS = load_data()
     st.session_state['favs'] = load_favs()
