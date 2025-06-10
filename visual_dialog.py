@@ -5,7 +5,6 @@ Created on Mon Mar 17 12:07:22 2025
 @author: dvive
 """
 
-import os
 import streamlit as st
 import pandas as pd
 from seaborn import diverging_palette
@@ -16,27 +15,6 @@ import zipfile
 
 st.set_page_config(page_icon = '🤑', page_title = 'El Rastro',
                    layout = "wide", initial_sidebar_state = "collapsed")
-# @st.cache_data
-# def load_data():
-#     folder = st.session_state['folder']
-#     with zipfile.zipfile(folder) as z:
-#         file = pd.read_excel(z.open('file.xlsx'), index_col = 0)
-#         competitors = pd.read_excel(z.open('competitors.xlsx'), index_col = 0)
-#         competitors = competitors[competitors.index.isin(file.index)]
-#         file.loc[competitors.index, 'Competitors'] = competitors['Competitors']
-#         file = file[file.last_update > '2024-12-31']
-#         #file_old = pd.read_excel(folder + 'file_20250405.xlsx', index_col = 0)
-#         IS = pd.read_csv(z.open('IS.csv'), index_col = 0).dropna()
-#         IS.Value = IS.Value.astype(float)
-#         BS = pd.read_csv(z.open('BS.csv'), index_col = 0).dropna()
-#         BS.Value = BS.Value.astype(float)
-#     return file, IS, BS #, file_old
-
-# @st.cache_resource
-# def load_favs():
-#     folder = st.session_state['folder']
-#     return list(pd.read_excel(folder + 'favs.xlsx', index_col = 0).index)
-    
 
 
 @st.dialog("Data folder")
@@ -46,7 +24,7 @@ def load_folder():
         with zipfile.ZipFile(folder, 'r') as z:
             file = pd.read_excel(z.open('file.xlsx'), index_col = 0)
             competitors = pd.read_excel(z.open('competitors.xlsx'), index_col = 0)
-            competitors[competitors.index.isin(file.index)]
+            competitors = competitors[competitors.index.isin(file.index)]
             file.loc[competitors.index, 'Competitors'] = competitors['Competitors']
             st.session_state['file'] = file[file.last_update > '2024-12-31']
             #file_old = pd.read_excel(folder + 'file_20250405.xlsx', index_col = 0)
