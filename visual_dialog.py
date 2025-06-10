@@ -43,9 +43,20 @@ def load_favs():
 def load_folder():
     folder = st.file_uploader('Upload data')
     if st.button("Submit"):
-        st.session_state['folder'] = folder
+        with zipfile.zipfile(folder) as z:
+            file = pd.read_excel(z.open('file.xlsx'), index_col = 0)
+            competitors = pd.read_excel(z.open('competitors.xlsx'), index_col = 0)
+            competitors = competitors[competitors.index.isin(file.index)]
+            file.loc[competitors.index, 'Competitors'] = competitors['Competitors']
+            file = file[file.last_update > '2024-12-31']
+            #file_old = pd.read_excel(folder + 'file_20250405.xlsx', index_col = 0)
+            IS = pd.read_csv(z.open('IS.csv'), index_col = 0).dropna()
+            IS.Value = IS.Value.astype(float)
+            BS = pd.read_csv(z.open('BS.csv'), index_col = 0).dropna()
+            BS.Value = BS.Value.astype(float)
+        #st.session_state['folder'] = folder
         st.rerun()
-    return
+    return file, IS, BS
 
 @st.fragment
 def filtering():    
@@ -308,9 +319,9 @@ def back_gradient(df_s, file_, var):
     
 
 if 'folder' not in st.session_state:
-    load_folder()
+    file, IS, BS = load_folder()
 else:
-    file, IS, BS = load_data()
+    # file, IS, BS = load_data()
     st.session_state['favs'] = load_favs()
 
     palette = diverging_palette(15, 150, as_cmap = True)
