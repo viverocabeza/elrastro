@@ -41,7 +41,7 @@ def load_favs():
 
 @st.dialog("Data folder")
 def load_folder():
-    folder = st.file_uploader('Upload data', type = 'zip').read()
+    folder = st.file_uploader('Upload data', type = 'zip')
     if folder is not None:
         st.session_state['folder'] = True
         # st.write(folder)
