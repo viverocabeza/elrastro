@@ -29,11 +29,10 @@ def load_folder():
             st.session_state['file'] = file[file.last_update > '2024-12-31']
             #file_old = pd.read_excel(folder + 'file_20250405.xlsx', index_col = 0)
             st.session_state['IS'] = pd.read_csv(z.open('IS.csv'), index_col = 0).dropna()
-            st.session_state['IS'].Value = IS.Value.astype(float)
+            st.session_state['IS'].Value = st.session_state['IS'].Value.astype(float)
             st.session_state['BS'] = pd.read_csv(z.open('BS.csv'), index_col = 0).dropna()
-            st.session_state['BS'].Value = BS.Value.astype(float)
+            st.session_state['BS'].Value = st.session_state['BS'].Value.astype(float)
             st.session_state['favs'] = list(pd.read_excel(z.open('favs.xlsx'), index_col = 0).index)
-        #st.session_state['folder'] = folder
         st.rerun()
     return
 
