@@ -296,7 +296,7 @@ def back_gradient(df_s, file_, var):
     return df_s
     
 
-if 'file' not in st.session_state:
+if 'file_orig' not in st.session_state:
     load_folder()
 else:
     file, IS, BS = st.session_state['file_orig'], st.session_state['IS'], st.session_state['BS']
