@@ -5,14 +5,12 @@ aioitertools==0.7.1
 aiosignal==1.2.0
 aiosqlite==0.18.0
 alabaster==0.7.12
-altair==5.0.1
 anyio==3.5.0
 appdirs==1.4.4
 argon2-cffi==21.3.0
 argon2-cffi-bindings==21.2.0
 arrow==1.2.3
 astroid==2.14.2
-astropy==5.1
 asttokens==2.0.5
 async-timeout==4.0.2
 atomicwrites==1.4.0
