@@ -26,7 +26,7 @@ def load_folder():
             competitors = pd.read_excel(z.open('competitors.xlsx'), index_col = 0)
             competitors = competitors[competitors.index.isin(file.index)]
             file.loc[competitors.index, 'Competitors'] = competitors['Competitors']
-            st.session_state['file'] = file[file.last_update > '2024-12-31']
+            st.session_state['file_orig'] = file[file.last_update > '2024-12-31']
             #file_old = pd.read_excel(folder + 'file_20250405.xlsx', index_col = 0)
             st.session_state['IS'] = pd.read_csv(z.open('IS.csv'), index_col = 0).dropna()
             st.session_state['IS'].Value = st.session_state['IS'].Value.astype(float)
@@ -299,7 +299,7 @@ def back_gradient(df_s, file_, var):
 if 'file' not in st.session_state:
     load_folder()
 else:
-    file, IS, BS = st.session_state['file'], st.session_state['IS'], st.session_state['BS']
+    file, IS, BS = st.session_state['file_orig'], st.session_state['IS'], st.session_state['BS']
 
     palette = diverging_palette(15, 150, as_cmap = True)
 
