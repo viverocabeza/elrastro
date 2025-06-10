@@ -43,7 +43,8 @@ def load_favs():
 def load_folder():
     folder = st.file_uploader('Upload data').read()
     if folder is not None:
-        st.write(folder)
+        st.session_state['folder'] = True
+        # st.write(folder)
     if st.button("Submit"):
         with zipfile.zipfile(folder) as z:
             file = pd.read_excel(z.open('file.xlsx'), index_col = 0)
@@ -324,7 +325,7 @@ def back_gradient(df_s, file_, var):
 if 'folder' not in st.session_state:
     load_folder()
 else:
-    # file, IS, BS = load_data()
+    file, IS, BS = load_folder()
     st.session_state['favs'] = load_favs()
 
     palette = diverging_palette(15, 150, as_cmap = True)
