@@ -41,12 +41,12 @@ def load_favs():
 
 @st.dialog("Data folder")
 def load_folder():
-    folder = st.file_uploader('Upload data').read()
+    folder = st.file_uploader('Upload data', type = 'zip').read()
     if folder is not None:
         st.session_state['folder'] = True
         # st.write(folder)
     if st.button("Submit"):
-        with zipfile.zipfile(folder) as z:
+        with zipfile.zipfile(folder, 'r') as z:
             file = pd.read_excel(z.open('file.xlsx'), index_col = 0)
             competitors = pd.read_excel(z.open('competitors.xlsx'), index_col = 0)
             competitors = competitors[competitors.index.isin(file.index)]
