@@ -16,50 +16,47 @@ import zipfile
 
 st.set_page_config(page_icon = '🤑', page_title = 'El Rastro',
                    layout = "wide", initial_sidebar_state = "collapsed")
-@st.cache_data
-def load_data():
-    folder = st.session_state['folder']
-    with zipfile.zipfile(folder) as z:
-        file = pd.read_excel(z.open('file.xlsx'), index_col = 0)
-        competitors = pd.read_excel(z.open('competitors.xlsx'), index_col = 0)
-        competitors = competitors[competitors.index.isin(file.index)]
-        file.loc[competitors.index, 'Competitors'] = competitors['Competitors']
-        file = file[file.last_update > '2024-12-31']
-        #file_old = pd.read_excel(folder + 'file_20250405.xlsx', index_col = 0)
-        IS = pd.read_csv(z.open('IS.csv'), index_col = 0).dropna()
-        IS.Value = IS.Value.astype(float)
-        BS = pd.read_csv(z.open('BS.csv'), index_col = 0).dropna()
-        BS.Value = BS.Value.astype(float)
-    return file, IS, BS #, file_old
+# @st.cache_data
+# def load_data():
+#     folder = st.session_state['folder']
+#     with zipfile.zipfile(folder) as z:
+#         file = pd.read_excel(z.open('file.xlsx'), index_col = 0)
+#         competitors = pd.read_excel(z.open('competitors.xlsx'), index_col = 0)
+#         competitors = competitors[competitors.index.isin(file.index)]
+#         file.loc[competitors.index, 'Competitors'] = competitors['Competitors']
+#         file = file[file.last_update > '2024-12-31']
+#         #file_old = pd.read_excel(folder + 'file_20250405.xlsx', index_col = 0)
+#         IS = pd.read_csv(z.open('IS.csv'), index_col = 0).dropna()
+#         IS.Value = IS.Value.astype(float)
+#         BS = pd.read_csv(z.open('BS.csv'), index_col = 0).dropna()
+#         BS.Value = BS.Value.astype(float)
+#     return file, IS, BS #, file_old
 
-@st.cache_resource
-def load_favs():
-    folder = st.session_state['folder']
-    return list(pd.read_excel(folder + 'favs.xlsx', index_col = 0).index)
+# @st.cache_resource
+# def load_favs():
+#     folder = st.session_state['folder']
+#     return list(pd.read_excel(folder + 'favs.xlsx', index_col = 0).index)
     
 
 
 @st.dialog("Data folder")
 def load_folder():
     folder = st.file_uploader('Upload data', type = 'zip')
-    if folder is not None:
-        st.session_state['folder'] = True
-        # st.write(folder)
     if st.button("Submit"):
         with zipfile.ZipFile(folder, 'r') as z:
             file = pd.read_excel(z.open('file.xlsx'), index_col = 0)
             competitors = pd.read_excel(z.open('competitors.xlsx'), index_col = 0)
-            competitors = competitors[competitors.index.isin(file.index)]
+            competitors[competitors.index.isin(file.index)]
             file.loc[competitors.index, 'Competitors'] = competitors['Competitors']
-            file = file[file.last_update > '2024-12-31']
+            st.session_state['file'] = file[file.last_update > '2024-12-31']
             #file_old = pd.read_excel(folder + 'file_20250405.xlsx', index_col = 0)
-            IS = pd.read_csv(z.open('IS.csv'), index_col = 0).dropna()
-            IS.Value = IS.Value.astype(float)
-            BS = pd.read_csv(z.open('BS.csv'), index_col = 0).dropna()
-            BS.Value = BS.Value.astype(float)
+            st.session_state['IS'] = pd.read_csv(z.open('IS.csv'), index_col = 0).dropna()
+            st.session_state['IS'].Value = IS.Value.astype(float)
+            st.session_state['BS'] = pd.read_csv(z.open('BS.csv'), index_col = 0).dropna()
+            st.session_state['BS'].Value = BS.Value.astype(float)
+            st.session_state['favs'] = list(pd.read_excel(z.open('favs.xlsx'), index_col = 0).index)
         #st.session_state['folder'] = folder
         st.rerun()
-        return file, IS, BS
     return
 
 @st.fragment
@@ -322,14 +319,12 @@ def back_gradient(df_s, file_, var):
     return df_s
     
 
-if 'folder' not in st.session_state:
+if 'file' not in st.session_state:
     load_folder()
 else:
-    file, IS, BS = load_folder()
-    st.session_state['favs'] = load_favs()
+    file, IS, BS = st.session_state['file'], st.session_state['IS'], st.session_state['BS']
 
     palette = diverging_palette(15, 150, as_cmap = True)
-    # format_ = {'Cap' : '{:.0f' }
 
     col1, col2 = st.columns([2, 1])
     
