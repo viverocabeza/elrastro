@@ -46,7 +46,7 @@ def load_folder():
         st.session_state['folder'] = True
         # st.write(folder)
     if st.button("Submit"):
-        with zipfile.Zipfile(folder, 'r') as z:
+        with zipfile.ZipFile(folder, 'r') as z:
             file = pd.read_excel(z.open('file.xlsx'), index_col = 0)
             competitors = pd.read_excel(z.open('competitors.xlsx'), index_col = 0)
             competitors = competitors[competitors.index.isin(file.index)]
